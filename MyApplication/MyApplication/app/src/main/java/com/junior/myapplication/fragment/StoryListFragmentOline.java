@@ -32,7 +32,7 @@ public class StoryListFragmentOline extends Fragment implements OnFinishGetDatas
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_story_list, container, false);
+        view = inflater.inflate(R.layout.fragment_list_story_online, container, false);
         livStoryList = (ListView) view.findViewById(R.id.liv_story_list);
    /*        initlizeComponent();
      IntentFilter filter = new IntentFilter();
@@ -65,6 +65,7 @@ public class StoryListFragmentOline extends Fragment implements OnFinishGetDatas
 
     @Override
     public void onSuccess() {
+        livStoryList.smoothScrollToPosition(0);
         storyAdapter.notifyDataSetChanged();
     }
 

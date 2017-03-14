@@ -39,30 +39,6 @@ public class StoryManager {
 
         new GetDatasAsyncTask().execute(url);
 
-/*        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Document document = Jsoup.connect(url).get();
-                    Elements elements = document.select("div.clear").first().select("article");
-
-                    stories.clear();
-                    for (int i = 0; i < elements.size(); i++) {
-                        Element element = elements.get(i);
-                        String imageUrl = element.select("img").attr("src");
-                        String name = element.select("img").attr("title");
-                        String content = element.select("p.post-excerpt").text();
-                        String url = element.select("div.post-thumb").select("a").attr("href");
-                        String author = "Truyện Dân Gian";
-                        Story story = new Story(imageUrl, name, author, content, url);
-                        stories.add(story);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();*/
     }
 
     private class GetDatasAsyncTask extends AsyncTask<String, Void, Boolean> {

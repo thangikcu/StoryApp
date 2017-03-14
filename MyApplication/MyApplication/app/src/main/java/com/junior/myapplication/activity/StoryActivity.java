@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.junior.myapplication.R;
@@ -27,6 +28,8 @@ public class StoryActivity extends AppCompatActivity {
         txtName= (TextView) findViewById(R.id.txt_name);
         txtAuthor= (TextView) findViewById(R.id.txt_author);
         txtContent= (TextView) findViewById(R.id.txt_content);
+
+        txtContent.setMovementMethod(new ScrollingMovementMethod());
 
         Intent intent=getIntent();
         txtName.setText(intent.getStringExtra("name"));

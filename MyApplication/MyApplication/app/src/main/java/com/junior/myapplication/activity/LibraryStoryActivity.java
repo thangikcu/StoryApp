@@ -5,10 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
-import com.junior.myapplication.model.Database;
 import com.junior.myapplication.R;
-import com.junior.myapplication.model.entity.Stories;
 import com.junior.myapplication.adapter.StoryAdapter;
+import com.junior.myapplication.model.Database;
+import com.junior.myapplication.model.entity.Stories;
 
 import java.util.ArrayList;
 
@@ -17,8 +17,10 @@ import java.util.ArrayList;
  */
 
 public class LibraryStoryActivity extends AppCompatActivity {
+
     private ListView livStory;
     private StoryAdapter storyAdapter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +37,6 @@ public class LibraryStoryActivity extends AppCompatActivity {
 
         ArrayList<Stories> stories = database.getStories();
 
-        storyAdapter = new StoryAdapter(this, stories);
-        livStory.setAdapter(storyAdapter);
+
     }
 }

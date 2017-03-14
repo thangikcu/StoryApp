@@ -3,6 +3,7 @@ package com.junior.myapplication.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.junior.myapplication.App;
 import com.junior.myapplication.model.entity.Stories;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Admin on 02/10/2017.
@@ -82,7 +85,7 @@ public class Database {
         }
     }
 
-    public long insertStory(Stories stories) {
+    public boolean insertStory(Stories stories) {
         openDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_STORIES_NAME, stories.getName());
@@ -91,18 +94,26 @@ public class Database {
         contentValues.put(COLUMN_STORIES_FAVORITE, stories.getFavorite());
 
         long storyId = sqLiteDatabase.insert(TABLE_NAME_STORY, null, contentValues);
-
         closeDataBase();
-        return storyId;
+
+        if (storyId > 0) {
+            stories.setId(storyId);
+            return true;
+        }
+        return false;
     }
 
-    public void deleteStory(long storyID) {
+    public boolean deleteStory(long storyID) {
         openDatabase();
-        sqLiteDatabase.delete(TABLE_NAME_STORY, "id=?", new String[]{String.valueOf(storyID)});
+        int r = sqLiteDatabase.delete(TABLE_NAME_STORY, "id=?", new String[]{String.valueOf(storyID)});
         closeDataBase();
+        if (r > 0) {
+            return true;
+        }
+        return false;
     }
 
-    public void UpdateStory(Stories stories) {
+    public void updateStory(Stories stories) {
         openDatabase();
         String whereArgs = String.valueOf(stories.getId());
         ContentValues contentValues = new ContentValues();
@@ -114,6 +125,57 @@ public class Database {
         sqLiteDatabase.update(TABLE_NAME_STORY, contentValues, "id=?",
                 new String[]{whereArgs});
         closeDataBase();
+    }
+
+    public boolean updateFavoriteStory(long id, int favorite) {
+        openDatabase();
+        String[] idStory = {String.valueOf(id)};
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_STORIES_FAVORITE, favorite);
+
+        int r = sqLiteDatabase.update(TABLE_NAME_STORY, contentValues, "id = ?",
+                idStory);
+        Log.d(TAG, "updateFavoriteStory: " + id + favorite + r);
+
+        closeDataBase();
+
+        if (r > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public Stories getStoryById(long id) {
+        openDatabase();
+
+        String sql = "SELECT * FROM " + TABLE_NAME_STORY
+                + " WHERE id = " + id;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+        Stories stories = null;
+
+        if (cursor != null) {
+            int indexName = cursor.getColumnIndex(COLUMN_STORIES_NAME);
+            int indexAuthor = cursor.getColumnIndex(COLUMN_STORIES_AUTHOR);
+            int indexContent = cursor.getColumnIndex(COLUMN_STORIES_CONTENT);
+            int indexFavorite = cursor.getColumnIndex(COLUMN_STORIES_FAVORITE);
+
+            cursor.moveToFirst();
+
+            String name = cursor.getString(indexName);
+            String author = cursor.getString(indexAuthor);
+            String content = cursor.getString(indexContent);
+            int favorite = cursor.getInt(indexFavorite);
+
+            stories = new Stories(id, name, author, content, favorite);
+        }
+
+        closeDataBase();
+
+        return stories;
+
     }
 
     public ArrayList<Stories> getStories() {

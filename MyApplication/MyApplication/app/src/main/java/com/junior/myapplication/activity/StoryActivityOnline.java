@@ -5,13 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.junior.myapplication.interfaces.OnFinishGetDatasListener;
 import com.junior.myapplication.R;
-import com.junior.myapplication.adapter.StoryAdapter;
+import com.junior.myapplication.fragment.StoryListFragment;
+import com.junior.myapplication.interfaces.OnFinishGetDatasListener;
 import com.junior.myapplication.model.ContentManager;
 import com.junior.myapplication.model.Database;
 import com.junior.myapplication.model.entity.Stories;
@@ -29,7 +31,7 @@ public class StoryActivityOnline extends AppCompatActivity implements View.OnCli
     private TextView txtContent;
     private ContentManager contentManager;
     private Stories stories;
-    private StoryAdapter storyAdapter;
+    private Database database;
     String url = "";
 
     @Override
@@ -45,11 +47,14 @@ public class StoryActivityOnline extends AppCompatActivity implements View.OnCli
     }
 
     private void initlizeComponent() {
+        database = new Database();
+
         txtName = (TextView) findViewById(R.id.txt_name);
         txtAuthor = (TextView) findViewById(R.id.txt_author);
         txtContent = (TextView) findViewById(R.id.txt_content);
         btnAddStory = (FloatingActionButton) findViewById(R.id.btn_add_story);
 
+        txtContent.setMovementMethod(new ScrollingMovementMethod());
         btnAddStory.setOnClickListener(this);
 
         Intent intent = getIntent();
@@ -68,20 +73,31 @@ public class StoryActivityOnline extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_story:
-                Database database = new Database();
+                Log.d(TAG, "onClick: ");
                 String name = (String) txtName.getText();
                 String author = (String) txtAuthor.getText();
-                String content = (String) txtContent.getText();
+                String content = txtContent.getText().toString();
                 stories = new Stories(name, author, content, 0);
-                database.insertStory(stories);
-                storyAdapter.notifyDataSetChanged();
-                Toast.makeText(this, "Đã tải truyện", Toast.LENGTH_SHORT).show();
+
+                if (database.insertStory(stories)) {
+                    Intent intent = new Intent(StoryListFragment.ADD_STORY_ACTION);
+                    intent.putExtra(StoryListFragment.STORY_ID, stories.getId());
+
+                    sendBroadcast(intent);
+
+                    Toast.makeText(this, "Đã thêm vào tủ chuyện", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+
         }
     }
 
     @Override
     public void onSuccess() {
         txtContent.setText(contentManager.getContent());
+
     }
 
     @Override

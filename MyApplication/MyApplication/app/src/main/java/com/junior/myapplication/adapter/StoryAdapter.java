@@ -1,15 +1,15 @@
 package com.junior.myapplication.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.junior.myapplication.model.Database;
 import com.junior.myapplication.R;
+import com.junior.myapplication.model.Database;
 import com.junior.myapplication.model.entity.Stories;
 
 import java.util.ArrayList;
@@ -18,9 +18,10 @@ import java.util.ArrayList;
  * Created by Admin on 02/20/2017.
  */
 
-public class StoryAdapter extends BaseAdapter {
+public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> {
     private LayoutInflater inflater;
     private ArrayList<Stories> stories;
+    private OnClickStoryListener onClickStoryListener;
 
     public StoryAdapter(Context context, ArrayList<Stories> stories) {
         inflater = LayoutInflater.from(context);
@@ -28,14 +29,20 @@ public class StoryAdapter extends BaseAdapter {
 
     }
 
-    @Override
-    public int getCount() {
-        return stories.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_story, parent, false));
     }
 
     @Override
-    public Stories getItem(int position) {
-        return stories.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.txtName.setText(stories.get(position).getName());
+        holder.txtAuthor.setText(stories.get(position).getAuthor());
+
+        if (stories.get(position).getFavorite() == 1) {
+            holder.imgLike.setImageResource(R.drawable.ic_love);
+        } else {
+            holder.imgLike.setImageResource(R.drawable.ic_like);
+        }
     }
 
     @Override
@@ -44,56 +51,70 @@ public class StoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_story, parent, false);
-            holder = new ViewHolder();
-            holder.txtName = (TextView) convertView.findViewById(R.id.txt_name);
-            holder.txtAuthor = (TextView) convertView.findViewById(R.id.txt_author);
-            holder.imgLike = (ImageView) convertView.findViewById(R.id.img_like);
-            holder.btnDelete = (ImageView) convertView.findViewById(R.id.btn_delete);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        holder.txtName.setText(getItem(position).getName());
-        holder.txtAuthor.setText(getItem(position).getAuthor());
-        if (getItem(position).getFavorite() == 0) {
-            holder.imgLike.setImageResource(R.drawable.ic_like);
-        } else {
-            holder.imgLike.setImageResource(R.drawable.ic_love);
-        }
-
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Database database = new Database();
-                database.deleteStory(position);
-                notifyDataSetInvalidated();
-            }
-        });
-        holder.imgLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getItem(position).getFavorite() == 0) {
-                    holder.imgLike.setImageResource(R.drawable.ic_love);
-                    getItem(position).setFavorite(1);
-                } else {
-                    holder.imgLike.setImageResource(R.drawable.ic_like);
-                    getItem(position).setFavorite(0);
-                }
-                notifyDataSetChanged();
-            }
-        });
-        return convertView;
+    public int getItemCount() {
+        return (stories != null) ? stories.size() : 0;
     }
 
-    private class ViewHolder {
+    public void setOnClickStoryListener(OnClickStoryListener onClickStoryListener) {
+        this.onClickStoryListener = onClickStoryListener;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView txtName;
         private TextView txtAuthor;
         private ImageView imgLike;
         private ImageView btnDelete;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            txtName = (TextView) itemView.findViewById(R.id.txt_name);
+            txtAuthor = (TextView) itemView.findViewById(R.id.txt_author);
+            imgLike = (ImageView) itemView.findViewById(R.id.img_like);
+            btnDelete = (ImageView) itemView.findViewById(R.id.btn_delete);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickStoryListener.onClickStory(stories.get(getAdapterPosition()));
+                }
+            });
+
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Stories story = stories.get(getAdapterPosition());
+
+                    Database database = new Database();
+                    if (database.deleteStory(story.getId())) {
+                        stories.remove(story);
+
+                        notifyItemRemoved(getAdapterPosition());
+                    }
+                }
+            });
+
+            imgLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Stories story = stories.get(getAdapterPosition());
+
+                    Database database = new Database();
+                    int favorite = (story.getFavorite() == 1) ? 0 : 1;
+
+                    if (database.updateFavoriteStory(story.getId(), favorite)) {
+
+                        story.setFavorite(favorite);
+
+                        notifyItemChanged(getAdapterPosition());
+                    }
+                }
+            });
+
+        }
     }
+
+    public interface OnClickStoryListener {
+        void onClickStory(Stories story);
+    }
+
 }

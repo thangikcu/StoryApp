@@ -26,9 +26,9 @@
                     android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabIndicatorColor="@android:color/white"
-                    app:tabSelectedTextColor="@android:color/white"
-                    app:tabTextColor="#EEEEEE" />
+                    app:tabTextColor="@color/white"
+                    app:tabSelectedTextColor="@color/colorAccent"
+                    app:tabIndicatorColor="@android:color/white" />
             </android.support.v7.widget.Toolbar>
 
 
