@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_co_tich_vn"
+            android:icon="@drawable/ic_book"
+            android:title="Truyện cổ tích Việt Nam" />
+        <item
+            android:id="@+id/nav_co_tich_tg"
+            android:icon="@drawable/ic_book"
+            android:title="Truyện cổ tích Thế Giới" />
+        <item
+            android:id="@+id/nav_dan_gian"
+            android:icon="@drawable/ic_book"
+            android:title="Truyện dân gian" />
+        <item
+            android:id="@+id/nav_ngu_ngon"
+            android:icon="@drawable/ic_book"
+            android:title="Truyện ngụ ngôn" />
+        <item
+            android:id="@+id/nav_cuoi"
+            android:icon="@drawable/ic_book"
+            android:title="Truyện cười" />
+        <item
+            android:id="@+id/nav_qua_tang_cs"
+            android:icon="@drawable/ic_book"
+            android:title="Quà tặng cuộc sống" />
+        <item
+            android:id="@+id/nav_song_ngu"
+            android:icon="@drawable/ic_book"
+            android:title="Truyện song ngữ" />
+    </group>
+
+
+</menu>

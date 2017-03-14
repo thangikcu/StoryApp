@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/txt_list_stories"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="Danh Sách Truyện"
+        android:textColor="#ffffff" />
+    <TextView
+        android:id="@+id/txt_my_stories"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="Tủ Truyện"
+        android:textColor="#ffffff" />
+
+</LinearLayout>
