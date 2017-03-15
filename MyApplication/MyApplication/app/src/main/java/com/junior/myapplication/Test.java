@@ -6,5 +6,5 @@ package com.junior.myapplication;
 
 public class Test {
     private int anInt;
-    privat String test = "thay đổi trên máy của anh";
+    private String test = "thay đổi  anh";
 }
