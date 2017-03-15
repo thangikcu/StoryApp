@@ -22,6 +22,8 @@ import com.junior.myapplication.model.entity.Topic;
 
 import java.util.ArrayList;
 
+import static android.support.design.R.styleable.NavigationView;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ViewPager viewPager;
     private TabLayout tabLayout;

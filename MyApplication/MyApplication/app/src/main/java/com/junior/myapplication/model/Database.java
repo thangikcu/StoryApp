@@ -181,7 +181,7 @@ public class Database {
     public ArrayList<Stories> getStories() {
         openDatabase();
         String sql = "SELECT * FROM " + TABLE_NAME_STORY
-                + " ORDER BY " + COLUMN_STORIES_NAME + " ASC ";
+                + " ORDER BY " + COLUMN_STORIES_FAVORITE + " DESC";
         // + COLUMN_STORIES_FAVORITE + " DESC";
         Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         if (cursor == null) {
